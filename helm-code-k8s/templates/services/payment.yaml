@@ -1,0 +1,48 @@
+{{- if .Values.services.payment.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: payment
+  ports:
+  - protocol: TCP
+    port: {{ .Values.services.payment.port }}
+    targetPort: {{ .Values.services.payment.targetPort }}
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-deployment
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: payment
+    {{- include "microservice-application.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+        {{- include "microservice-application.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: payment-container
+        image: "{{ .Values.global.image.repository }}:{{ .Values.services.payment.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.services.payment.targetPort }}
+        resources:
+          {{- toYaml .Values.services.payment.resources | nindent 10 }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.global.configMapName }}
+        - secretRef:
+            name: {{ .Values.global.secretName }}
+{{- end }}

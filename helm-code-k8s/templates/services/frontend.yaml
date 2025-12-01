@@ -1,0 +1,43 @@
+{{- if .Values.services.frontend.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: {{ .Values.services.frontend.port }}
+    targetPort: {{ .Values.services.frontend.targetPort }}
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: frontend
+    {{- include "microservice-application.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        {{- include "microservice-application.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: frontend-container
+        image: "{{ .Values.global.image.repository }}:{{ .Values.services.frontend.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.services.frontend.targetPort }}
+        resources:
+          {{- toYaml .Values.services.frontend.resources | nindent 10 }}
+{{- end }}

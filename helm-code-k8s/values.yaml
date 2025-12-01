@@ -1,0 +1,156 @@
+# Global values
+global:
+  namespace: microservice-application
+  image:
+    repository: jubair2002/microservice-app
+  configMapName: microservice-app-config
+  secretName: microservice-app-secret
+  
+# Namespace configuration
+namespace:
+  create: true
+  name: microservice-application
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  host: myapp.example.com
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
+# Database configuration
+database:
+  host: gondola.proxy.rlwy.net
+  port: 55441
+  user: root
+  name: railway
+  password: "MVNydmdUQWJ2SVY="  # Base64 encoded
+
+# Services configuration
+services:
+  auth:
+    enabled: true
+    port: 5001
+    targetPort: 5001
+    image:
+      tag: auth
+    resources:
+      requests:
+        cpu: 200m
+        memory: 25Mi
+      limits:
+        cpu: 500m
+        memory: 51Mi
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 8
+      cpuUtilization: 70
+      memoryUtilization: 80
+  
+  user:
+    enabled: true
+    port: 5002
+    targetPort: 5002
+    image:
+      tag: user
+    resources:
+      requests:
+        cpu: 200m
+        memory: 25Mi
+      limits:
+        cpu: 500m
+        memory: 51Mi
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 8
+      cpuUtilization: 70
+      memoryUtilization: 80
+  
+  survey:
+    enabled: true
+    port: 5003
+    targetPort: 5003
+    image:
+      tag: survey
+    resources:
+      requests:
+        cpu: 200m
+        memory: 25Mi
+      limits:
+        cpu: 500m
+        memory: 51Mi
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 8
+      cpuUtilization: 70
+      memoryUtilization: 80
+  
+  payment:
+    enabled: true
+    port: 5004
+    targetPort: 5004
+    image:
+      tag: payment
+    resources:
+      requests:
+        cpu: 200m
+        memory: 25Mi
+      limits:
+        cpu: 500m
+        memory: 51Mi
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 8
+      cpuUtilization: 70
+      memoryUtilization: 80
+  
+  apiGateway:
+    enabled: true
+    port: 8000
+    targetPort: 8000
+    image:
+      tag: api-gateway
+    resources:
+      requests:
+        cpu: 200m
+        memory: 25Mi
+      limits:
+        cpu: 500m
+        memory: 51Mi
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 10
+      cpuUtilization: 70
+      memoryUtilization: 80
+  
+  frontend:
+    enabled: true
+    port: 80
+    targetPort: 80
+    image:
+      tag: frontend
+    resources:
+      requests:
+        cpu: 200m
+        memory: 25Mi
+      limits:
+        cpu: 500m
+        memory: 51Mi
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 6
+      cpuUtilization: 70
+      memoryUtilization: 80
+
+# Gateway configuration
+gateway:
+  host: 0.0.0.0
+  port: 8000

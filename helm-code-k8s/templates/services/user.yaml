@@ -1,0 +1,48 @@
+{{- if .Values.services.user.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: user
+  ports:
+  - protocol: TCP
+    port: {{ .Values.services.user.port }}
+    targetPort: {{ .Values.services.user.targetPort }}
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: user
+    {{- include "microservice-application.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+        {{- include "microservice-application.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: user-container
+        image: "{{ .Values.global.image.repository }}:{{ .Values.services.user.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.services.user.targetPort }}
+        resources:
+          {{- toYaml .Values.services.user.resources | nindent 10 }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.global.configMapName }}
+        - secretRef:
+            name: {{ .Values.global.secretName }}
+{{- end }}

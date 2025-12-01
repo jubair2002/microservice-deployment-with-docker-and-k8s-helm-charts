@@ -1,0 +1,178 @@
+# HPA for Auth Service
+{{- if .Values.services.auth.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: auth-hpa
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: auth-deployment
+  minReplicas: {{ .Values.services.auth.hpa.minReplicas }}
+  maxReplicas: {{ .Values.services.auth.hpa.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.auth.hpa.cpuUtilization }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.auth.hpa.memoryUtilization }}
+---
+{{- end }}
+
+# HPA for User Service
+{{- if .Values.services.user.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-hpa
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user-deployment
+  minReplicas: {{ .Values.services.user.hpa.minReplicas }}
+  maxReplicas: {{ .Values.services.user.hpa.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.user.hpa.cpuUtilization }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.user.hpa.memoryUtilization }}
+---
+{{- end }}
+
+# HPA for Survey Service
+{{- if .Values.services.survey.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: survey-hpa
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: survey-deployment
+  minReplicas: {{ .Values.services.survey.hpa.minReplicas }}
+  maxReplicas: {{ .Values.services.survey.hpa.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.survey.hpa.cpuUtilization }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.survey.hpa.memoryUtilization }}
+---
+{{- end }}
+
+# HPA for Payment Service
+{{- if .Values.services.payment.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: payment-hpa
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: payment-deployment
+  minReplicas: {{ .Values.services.payment.hpa.minReplicas }}
+  maxReplicas: {{ .Values.services.payment.hpa.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.payment.hpa.cpuUtilization }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.payment.hpa.memoryUtilization }}
+---
+{{- end }}
+
+# HPA for API Gateway Service
+{{- if .Values.services.apiGateway.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-gateway-hpa
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gateway-deployment
+  minReplicas: {{ .Values.services.apiGateway.hpa.minReplicas }}
+  maxReplicas: {{ .Values.services.apiGateway.hpa.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.apiGateway.hpa.cpuUtilization }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.apiGateway.hpa.memoryUtilization }}
+---
+{{- end }}
+
+# HPA for Frontend Service
+{{- if .Values.services.frontend.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend-deployment
+  minReplicas: {{ .Values.services.frontend.hpa.minReplicas }}
+  maxReplicas: {{ .Values.services.frontend.hpa.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.frontend.hpa.cpuUtilization }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.services.frontend.hpa.memoryUtilization }}
+{{- end }}

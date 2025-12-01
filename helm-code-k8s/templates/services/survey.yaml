@@ -1,0 +1,48 @@
+{{- if .Values.services.survey.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: survey-service
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: survey
+  ports:
+  - protocol: TCP
+    port: {{ .Values.services.survey.port }}
+    targetPort: {{ .Values.services.survey.targetPort }}
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: survey-deployment
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: survey
+    {{- include "microservice-application.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: survey
+  template:
+    metadata:
+      labels:
+        app: survey
+        {{- include "microservice-application.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: survey-container
+        image: "{{ .Values.global.image.repository }}:{{ .Values.services.survey.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.services.survey.targetPort }}
+        resources:
+          {{- toYaml .Values.services.survey.resources | nindent 10 }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.global.configMapName }}
+        - secretRef:
+            name: {{ .Values.global.secretName }}
+{{- end }}

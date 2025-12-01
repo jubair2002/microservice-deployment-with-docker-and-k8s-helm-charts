@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.global.configMapName }}
+  namespace: {{ .Values.global.namespace }}
+data:
+  DB_HOST: {{ .Values.database.host | quote }}
+  DB_PORT: {{ .Values.database.port | quote }}
+  DB_USER: {{ .Values.database.user | quote }}
+  DB_NAME: {{ .Values.database.name | quote }}
+  
+  AUTH_SERVICE_URL: {{ include "microservice-application.authUrl" . }}
+  USER_SERVICE_URL: {{ include "microservice-application.userUrl" . }}
+  SURVEY_SERVICE_URL: {{ include "microservice-application.surveyUrl" . }}
+  PAYMENT_SERVICE_URL: {{ include "microservice-application.paymentUrl" . }}
+  
+  GATEWAY_HOST: {{ .Values.gateway.host | quote }}
+  GATEWAY_PORT: {{ .Values.gateway.port | quote }}
