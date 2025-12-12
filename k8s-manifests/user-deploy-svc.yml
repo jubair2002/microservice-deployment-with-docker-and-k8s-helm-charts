@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: microservice-application
+spec:
+  selector:
+    app: user
+  ports:
+  - protocol: TCP
+    port: 5002
+    targetPort: 5002
+  type: ClusterIP
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: microservice-application
+  labels:
+    app: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+      - name: user-container
+        image: jubair2002/microservice-app:user
+        ports:
+        - containerPort: 5002
+        resources:
+          requests:
+            cpu: 200m # 0.2 of a CPU
+            memory: 25Mi # 256 Mebibytes
+          limits:
+            cpu: 500m # 0.5 of a CPU
+            memory: 51Mi # 512 Mebibytes
+        envFrom:
+        - configMapRef:
+            name: microservice-app-config
+        - secretRef:
+            name: microservice-app-secret

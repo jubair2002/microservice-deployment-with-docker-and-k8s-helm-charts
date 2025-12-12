@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: survey-service
+  namespace: microservice-application
+spec:
+  selector:
+    app: survey
+  ports:
+  - protocol: TCP
+    port: 5003
+    targetPort: 5003
+  type: ClusterIP
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: survey-deployment
+  namespace: microservice-application
+  labels:
+    app: survey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: survey
+  template:
+    metadata:
+      labels:
+        app: survey
+    spec:
+      containers:
+      - name: survey-container
+        image: jubair2002/microservice-app:survey
+        ports:
+        - containerPort: 5003
+        resources:
+          requests:
+            cpu: 200m # 0.2 of a CPU
+            memory: 25Mi # 256 Mebibytes
+          limits:
+            cpu: 500m # 0.5 of a CPU
+            memory: 51Mi # 512 Mebibytes
+        envFrom:
+        - configMapRef:
+            name: microservice-app-config
+        - secretRef:
+            name: microservice-app-secret

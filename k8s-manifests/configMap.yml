@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: microservice-app-config
+  namespace: microservice-application
+data:
+  DB_HOST: gondola.proxy.rlwy.net
+  DB_PORT: "55441"
+  DB_USER: root
+  DB_NAME: railway
+
+  AUTH_SERVICE_URL: http://auth-service:5001
+  USER_SERVICE_URL: http://user-service:5002
+  SURVEY_SERVICE_URL: http://survey-service:5003
+  PAYMENT_SERVICE_URL: http://payment-service:5004
+
+  GATEWAY_HOST: 0.0.0.0
+  GATEWAY_PORT: "8000"
